@@ -11,10 +11,8 @@ import pptx
 from PIL import Image
 from io import BytesIO
 import base64
-import time
 import urllib.parse  # URL 인코딩을 위해 추가
 from openai.error import RateLimitError
-from langchain.chat_models import ChatOpenAI
 
 # 전역변수로 프롬프트 저장
 global_generated_prompt = []
@@ -22,83 +20,29 @@ global_generated_prompt = []
 # 페이지 너비를 전체 화면으로 설정
 st.set_page_config(layout="wide")
 
-# GitHub API 요청을 처리하는 함수
-def get_github_files(repo, branch, token, folder_name=None):
-    url = f"https://api.github.com/repos/{repo}/contents/{folder_name}?ref={branch}"
+# GitHub API 요청을 처리하는 함수 (파일 목록을 가져옴)
+def get_github_files(repo, branch, token):
+    url = f"https://api.github.com/repos/{repo}/git/trees/{branch}?recursive=1"
     headers = {"Authorization": f"token {token}"}
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        files = [item['name'] for item in response.json() if item['type'] == 'file']
+        files = [item['path'] for item in response.json().get('tree', []) if item['type'] == 'blob']
         return files
     else:
+        st.error("GitHub 파일 목록을 가져오지 못했습니다. 저장소 정보나 토큰을 확인하세요.")
         return []
-
-# GitHub에서 파일의 SHA 값을 가져오는 함수
-def get_file_sha(repo, file_path, token, branch='main'):
-    encoded_file_path = urllib.parse.quote(file_path)  # 파일 경로에 대한 URL 인코딩 추가
-    url = f"https://api.github.com/repos/{repo}/contents/{encoded_file_path}?ref={branch}"
-    headers = {"Authorization": f"token {token}"}
-    response = requests.get(url, headers=headers)
-    
-    if response.status_code == 200:
-        return response.json().get('sha', None)
-    else:
-        return None
-
-# GitHub에 파일 업로드 함수 (상대 경로 적용)
-def upload_file_to_github(repo, folder_name, file_name, file_content, token, branch='main', sha=None):
-    # 상대 경로로 파일명을 구성
-    folder_path = f"./{folder_name}/{file_name}"
-    
-    # URL 인코딩 적용
-    encoded_file_name = urllib.parse.quote(file_name)
-    url = f"https://api.github.com/repos/{repo}/contents/{folder_name}/{encoded_file_name}"
-    headers = {
-        "Authorization": f"token {token}",
-        "Content-Type": "application/json"
-    }
-
-    content_encoded = base64.b64encode(file_content).decode('utf-8')
-
-    data = {
-        "message": f"Upload {file_name}",
-        "content": content_encoded,
-        "branch": branch
-    }
-
-    if sha:
-        data["sha"] = sha
-
-    response = requests.put(url, json=data, headers=headers)
-
-    if response.status_code == 201:
-        st.success(f"{file_name} 파일이 성공적으로 업로드되었습니다.")
-    elif response.status_code == 200:
-        st.success(f"{file_name} 파일이 성공적으로 덮어쓰기 되었습니다.")
-    else:
-        st.error(f"파일 업로드에 실패했습니다: {response.status_code}")
-        st.error(response.json())
 
 # GitHub에서 파일을 다운로드하는 함수
 def get_file_from_github(repo, branch, filepath, token):
-    # 파일명에 한글 및 공백이 있는 경우 URL 인코딩 처리
-    encoded_filepath = urllib.parse.quote(filepath)
+    encoded_filepath = urllib.parse.quote(filepath)  # URL 인코딩 추가
     url = f"https://api.github.com/repos/{repo}/contents/{encoded_filepath}?ref={branch}"
     headers = {"Authorization": f"token {token}"}
     response = requests.get(url, headers=headers)
-
-    # 404 오류를 처리하고 파일 경로 문제를 명확하게 알림
-    if response.status_code == 404:
-        st.error(f"{filepath} 파일을 가져오지 못했습니다. 상태 코드: 404 (파일을 찾을 수 없습니다). 경로를 확인하세요.")
-        return None
-    elif response.status_code != 200:
-        st.error(f"{filepath} 파일을 가져오지 못했습니다. 상태 코드: {response.status_code}")
-        return None
-
-    try:
+    
+    if response.status_code == 200:
         return BytesIO(requests.get(response.json()['download_url']).content)
-    except Exception as e:
-        st.error(f"파일 데이터를 처리하는 중 오류가 발생했습니다: {str(e)}")
+    else:
+        st.error(f"{filepath} 파일을 가져오지 못했습니다. 상태 코드: {response.status_code}")
         return None
 
 # 다양한 파일 형식에서 데이터를 추출하는 함수
@@ -121,37 +65,16 @@ def extract_data_from_file(file_content, file_type):
 
 # PDF 파일에서 텍스트 추출
 def extract_text_from_pdf(file_content):
-    try:
-        if file_content is None:
-            raise ValueError("유효하지 않은 파일입니다. PDF 파일이 없습니다.")
-        
-        file_content.seek(0)  # 파일 포인터를 처음으로 이동
-        reader = PyPDF2.PdfReader(file_content)
-        text = ''
-        for page in range(len(reader.pages)):
-            text += reader.pages[page].extract_text()
-        return text
-    except Exception as e:
-        st.error(f"PDF 파일을 처리하는 중 오류가 발생했습니다: {str(e)}")
-        return None
+    reader = PyPDF2.PdfReader(file_content)
+    text = ''
+    for page in range(len(reader.pages)):
+        text += reader.pages[page].extract_text()
+    return text
 
-# 엑셀 파일에서 텍스트 추출 (시트 정보를 정확하게 가져오도록 수정)
+# 엑셀 파일에서 텍스트 추출
 def extract_text_from_excel(file_content):
-    try:
-        if file_content is None:
-            raise ValueError("유효하지 않은 파일입니다. 파일이 없거나 경로가 잘못되었을 수 있습니다.")
-        # 엑셀 데이터를 BytesIO에서 읽어옴
-        excel_data = pd.read_excel(file_content, sheet_name=None)  # 모든 시트를 불러옴
-        all_data = {}
-
-        # 각 시트의 데이터를 사전 형식으로 저장
-        for sheet_name, data in excel_data.items():
-            all_data[sheet_name] = data
-
-        return all_data  # 각 시트 이름과 데이터가 포함된 딕셔너리 반환
-    except Exception as e:
-        st.error(f"엑셀 파일을 불러오는 중 오류가 발생했습니다: {str(e)}")
-        return None
+    excel_data = pd.read_excel(file_content)
+    return excel_data.to_string()
 
 # CSV 파일에서 텍스트 추출
 def extract_text_from_csv(file_content):
@@ -324,7 +247,7 @@ with col1:
 
                     file_list = ['파일을 선택하세요.']
                     if st.session_state.get('github_token') and st.session_state.get('github_repo'):
-                        file_list += get_github_files(st.session_state['github_repo'], st.session_state['github_branch'], st.session_state['github_token'], folder_name='uploadFiles')
+                        file_list += get_github_files(st.session_state['github_repo'], st.session_state['github_branch'], st.session_state['github_token'])
 
                     selected_file = st.selectbox(f"파일 선택 (요청사항 {idx+1})", options=file_list, key=f"file_select_{idx}")
 
@@ -348,7 +271,7 @@ with col1:
                         else:
                             st.error(f"지원되지 않는 파일 형식입니다: {file_type}")
 
-                        row['파일'] = f"/{st.session_state['github_repo']}/{st.session_state['github_branch']}/uploadFiles/{selected_file}"
+                        row['파일'] = f"/{st.session_state['github_repo']}/{st.session_state['github_branch']}/{selected_file}"
                         row['데이터'] = file_data
 
                     st.text_input(f"파일 경로 (요청사항 {idx+1})", row['파일'], disabled=True, key=f"file_{idx}")
