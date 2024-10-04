@@ -229,7 +229,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("GitHub 정보 입력")
-    repo_input = st.text_input("GitHub 저장소 (owner/repo 형식)", value="")
+    repo_input = st.text_input("GitHub 저장소 (owner/repo 형식)", value="geunilbae/project5")
     branch_input = st.text_input("GitHub 브랜치", value="main")
     token_input = st.text_input("GitHub Token", type="password")
 
