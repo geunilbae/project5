@@ -13,6 +13,7 @@ from io import BytesIO
 import base64
 import urllib.parse  # URL 인코딩을 위해 추가
 from openai.error import RateLimitError
+from langchain.chat_models import ChatOpenAI
 
 # 전역변수로 프롬프트 저장
 global_generated_prompt = []
@@ -101,7 +102,7 @@ def extract_text_from_image(file_content):
     image = Image.open(file_content)
     return "이미지에서 텍스트를 추출하는 기능은 구현되지 않았습니다."
 
-# LLM을 통해 프롬프트와 파일을 전달하고 응답을 받는 함수 (순차적으로 처리 및 RateLimitError 처리 강화)
+# LLM을 통해 프롬프트와 파일을 전달하고 응답을 받는 함수
 def run_llm_with_file_and_prompt(api_key, titles, requests, file_data_list):
     global global_generated_prompt
     openai.api_key = api_key
@@ -110,13 +111,14 @@ def run_llm_with_file_and_prompt(api_key, titles, requests, file_data_list):
     global_generated_prompt = []  # 프롬프트들을 담을 리스트 초기화
 
     for i, (title, request, file_data) in enumerate(zip(titles, requests, file_data_list)):
-        if isinstance(file_data, pd.DataFrame):  # 엑셀, CSV의 경우 DataFrame을 텍스트로 변환
+        if isinstance(file_data, pd.DataFrame):
             file_data_str = file_data.to_string()
-        elif isinstance(file_data, dict):  # 여러 시트를 가져온 경우
+        elif isinstance(file_data, dict):
             file_data_str = "\n".join([f"시트 이름: {sheet_name}\n{data.to_string()}" for sheet_name, data in file_data.items()])
         else:
             file_data_str = str(file_data)
 
+        # 프롬프트 생성
         generated_prompt = f"""
         보고서 제목은 '{title}'로 하고, 아래의 파일 데이터를 분석하여 '{request}'를 요구 사항을 만족할 수 있도록 최적화된 보고서를 완성해.
         표로 표현 할 때는 table 태그 형식으로 구현해야 한다. th과 td 태그는 border는 사이즈 1이고 색상은 검정색으로 구성한다.
@@ -133,18 +135,20 @@ def run_llm_with_file_and_prompt(api_key, titles, requests, file_data_list):
             input_variables=[]
         )
 
+        # LLM 모델 생성
         llm = ChatOpenAI(model_name="gpt-4o")
         chain = LLMChain(llm=llm, prompt=prompt_template)
-        
+
         success = False
         retry_count = 0
         max_retries = 5  # 최대 재시도 횟수
-        
+
+        # 응답을 받을 때까지 재시도
         while not success and retry_count < max_retries:
             try:
                 response = chain.run({})
                 responses.append(response)
-                success = True  # 성공했을 때 True로 설정
+                success = True
             except RateLimitError:
                 retry_count += 1
                 st.warning(f"API 요청 한도를 초과했습니다. 10초 후 다시 시도합니다. 재시도 횟수: {retry_count}/{max_retries}")
