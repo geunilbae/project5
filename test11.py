@@ -14,6 +14,7 @@ import base64
 import urllib.parse  # URL 인코딩을 위해 추가
 from openai.error import RateLimitError
 from langchain.chat_models import ChatOpenAI
+import time  # time 모듈 추가
 
 # 전역변수로 프롬프트 저장
 global_generated_prompt = []
