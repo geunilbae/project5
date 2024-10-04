@@ -12,6 +12,7 @@ from PIL import Image
 from io import BytesIO
 import base64
 import time
+import urllib.parse  # URL 인코딩을 위해 추가
 from openai.error import RateLimitError
 from langchain.chat_models import ChatOpenAI
 
@@ -34,7 +35,8 @@ def get_github_files(repo, branch, token, folder_name=None):
 
 # GitHub에서 파일의 SHA 값을 가져오는 함수
 def get_file_sha(repo, file_path, token, branch='main'):
-    url = f"https://api.github.com/repos/{repo}/contents/{file_path}?ref={branch}"
+    encoded_file_path = urllib.parse.quote(file_path)  # 파일 경로에 대한 URL 인코딩 추가
+    url = f"https://api.github.com/repos/{repo}/contents/{encoded_file_path}?ref={branch}"
     headers = {"Authorization": f"token {token}"}
     response = requests.get(url, headers=headers)
     
@@ -43,9 +45,14 @@ def get_file_sha(repo, file_path, token, branch='main'):
     else:
         return None
 
-# GitHub에 파일 업로드 함수
+# GitHub에 파일 업로드 함수 (상대 경로 적용)
 def upload_file_to_github(repo, folder_name, file_name, file_content, token, branch='main', sha=None):
-    url = f"https://api.github.com/repos/{repo}/contents/{folder_name}/{file_name}"
+    # 상대 경로로 파일명을 구성
+    folder_path = f"./{folder_name}/{file_name}"
+    
+    # URL 인코딩 적용
+    encoded_file_name = urllib.parse.quote(file_name)
+    url = f"https://api.github.com/repos/{repo}/contents/{folder_name}/{encoded_file_name}"
     headers = {
         "Authorization": f"token {token}",
         "Content-Type": "application/json"
@@ -74,7 +81,9 @@ def upload_file_to_github(repo, folder_name, file_name, file_content, token, bra
 
 # GitHub에서 파일을 다운로드하는 함수
 def get_file_from_github(repo, branch, filepath, token):
-    url = f"https://api.github.com/repos/{repo}/contents/{filepath}?ref={branch}"
+    # 파일명에 한글 및 공백이 있는 경우 URL 인코딩 처리
+    encoded_filepath = urllib.parse.quote(filepath)
+    url = f"https://api.github.com/repos/{repo}/contents/{encoded_filepath}?ref={branch}"
     headers = {"Authorization": f"token {token}"}
     response = requests.get(url, headers=headers)
 
@@ -399,6 +408,4 @@ if "response" in st.session_state:
     for idx, response in enumerate(st.session_state["response"]):
         st.text_area(f"응답 {idx+1}:", value=response, height=300)
         
-    
         st.components.v1.html(response, height=600, scrolling=True)
-     
