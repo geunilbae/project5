@@ -117,7 +117,7 @@ col1, col2 = st.columns(2)  # 두 개의 컬럼으로 나눔
 # GitHub 정보 저장
 with col1:
     st.subheader("GitHub 정보 입력")
-    repo_input = st.text_input("GitHub 저장소 (owner/repo 형식)", value="")  # 공백으로 설정
+    repo_input = st.text_input("GitHub 저장소 (owner/repo 형식)", value=""geunilbae/project5")  # 공백으로 설정
     branch_input = st.text_input("GitHub 브랜치", value="main")
     token_input = st.text_input("GitHub Token", type="password")
 
