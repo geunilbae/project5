@@ -1,118 +1,191 @@
-import streamlit as st
-import pandas as pd
 import os
-from pathlib import Path
-from langchain import OpenAI
+import openai
+import streamlit as st
+from langchain.prompts import PromptTemplate
+from langchain import LLMChain
+import requests
+import PyPDF2
+import pandas as pd
+import docx
+import pptx
+from PIL import Image
 from io import BytesIO
 
-# 0. Streamlit 초기 구성 및 프레임 나누기
-st.set_page_config(layout="wide")  # 페이지 가로길이를 모니터 전체 해상도로 설정
-st.title("일일 업무 및 보고서 자동화 프로그램")
+# 페이지 너비를 전체 화면으로 설정
+st.set_page_config(layout="wide")
 
-# API 키 저장을 위한 변수 (세션 상태에 저장)
-if 'api_key' not in st.session_state:
-    st.session_state['api_key'] = None
-
-# Streamlit의 세로 프레임 구성
-col1, col2, col3 = st.columns([0.39, 0.10, 0.49])
-
-# 데이터 저장을 위한 임시 변수들
-rows = []
-uploaded_files = []
-llm_results = {}
-
-# 1. 작성 보고서 요청사항
-with col1:
-    st.subheader("1. 작성 보고서 요청사항")
-    df = pd.DataFrame(columns=["제목", "요청", "데이터"])
-
-    # 기본 1행 추가
-    if len(rows) == 0:
-        rows.append({"제목": "titleValue1", "요청": "requestValue1", "데이터": ""})
-
-    for idx, row in enumerate(rows):
-        st.text(f"행 {idx+1}")
-        row['제목'] = st.text_input(f"제목 (행 {idx+1})", row['제목'])
-        row['요청'] = st.text_input(f"요청 (행 {idx+1})", row['요청'])
-        file_path = st.text_input(f"데이터 (행 {idx+1})", row['데이터'], disabled=True)
-        if st.button(f"선택 (행 {idx+1})"):
-            uploaded_file = st.file_uploader("파일 업로드", type=['txt', 'csv', 'pdf', 'docx', 'xlsx', 'pptx'])
-            if uploaded_file is not None:
-                row['데이터'] = uploaded_file.name
-                uploaded_files.append(uploaded_file)
-
-    # 행 추가 및 삭제 버튼
-    if st.button("행 추가"):
-        rows.append({"제목": f"titleValue{len(rows) + 1}", "요청": f"requestValue{len(rows) + 1}", "데이터": ""})
-    if st.button("행 삭제"):
-        rows = rows[:-1] if len(rows) > 1 else rows  # 최소 1행은 유지
-
-# 2. 파일 업로드 기능
-with col1:
-    st.subheader("2. 파일 업로드")
-    uploaded_files = st.file_uploader("파일을 여러 개 드래그 앤 드롭하여 업로드하세요.", accept_multiple_files=True)
-
-# 5. 참고 템플릿 미리보기
-with col1:
-    st.subheader("5. 참고 템플릿 미리보기")
-    selected_template_file = st.selectbox("템플릿 파일 선택", options=["Template1", "Template2", "Template3"])
-    if st.button("선택"):
-        if selected_template_file:
-            st.write(f"선택한 템플릿: {selected_template_file}")
-            # 파일 내용 미리보기 팝업창 구현은 Streamlit 제한 상 생략
-
-# 3. 실행 버튼 및 OpenAPI 키 입력
-with col2:
-    st.subheader("3. 실행")
-
-    # OpenAI API 키 입력 부분
-    if st.session_state['api_key'] is None:
-        st.warning("OpenAI API 키가 필요합니다.")
-        api_key = st.text_input("OpenAI API 키를 입력하세요.", type="password")
-        if st.button("API 키 저장"):
-            if api_key:
-                st.session_state['api_key'] = api_key
-                st.success("API 키가 저장되었습니다.")
+# GitHub API 요청을 처리하는 함수
+def get_github_files(repo, branch, token):
+    url = f"https://api.github.com/repos/{repo}/git/trees/{branch}?recursive=1"
+    headers = {"Authorization": f"token {token}"}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        files = [item['path'] for item in response.json().get('tree', []) if item['type'] == 'blob']
+        return files
     else:
-        st.info("OpenAI API 키가 이미 저장되어 있습니다.")
+        st.error("GitHub 파일 목록을 가져오지 못했습니다. 저장소 정보나 토큰을 확인하세요.")
+        return []
 
-    # LLM 실행 버튼
-    if st.button("실행"):
-        if st.session_state['api_key'] is None:
-            st.error("OpenAI API 키를 입력해야 실행할 수 있습니다.")
+# GitHub에서 파일을 다운로드하는 함수
+def get_file_from_github(repo, branch, filepath, token):
+    url = f"https://api.github.com/repos/{repo}/contents/{filepath}?ref={branch}"
+    headers = {"Authorization": f"token {token}"}
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        return BytesIO(requests.get(response.json()['download_url']).content)
+    else:
+        st.error(f"{filepath} 파일을 가져오지 못했습니다.")
+        return None
+
+# 다양한 파일 형식에서 데이터를 추출하는 함수
+def extract_data_from_file(file_content, file_type):
+    if file_type == 'pdf':
+        return extract_text_from_pdf(file_content)
+    elif file_type == 'xlsx':
+        return extract_text_from_excel(file_content)
+    elif file_type == 'docx':
+        return extract_text_from_word(file_content)
+    elif file_type == 'pptx':
+        return extract_text_from_ppt(file_content)
+    elif file_type in ['png', 'jpg', 'jpeg']:
+        return extract_text_from_image(file_content)
+    else:
+        st.error(f"{file_type} 형식은 지원되지 않습니다.")
+        return None
+
+# PDF 파일에서 텍스트 추출
+def extract_text_from_pdf(file_content):
+    reader = PyPDF2.PdfReader(file_content)
+    text = ''
+    for page in range(len(reader.pages)):
+        text += reader.pages[page].extract_text()
+    return text
+
+# 엑셀 파일에서 텍스트 추출
+def extract_text_from_excel(file_content):
+    excel_data = pd.read_excel(file_content)
+    return excel_data.to_string()
+
+# 워드 파일에서 텍스트 추출
+def extract_text_from_word(file_content):
+    doc = docx.Document(file_content)
+    return '\n'.join([para.text for para in doc.paragraphs])
+
+# PPT 파일에서 텍스트 추출
+def extract_text_from_ppt(file_content):
+    presentation = pptx.Presentation(file_content)
+    text = ''
+    for slide in presentation.slides:
+        for shape in slide.shapes:
+            if hasattr(shape, "text"):
+                text += shape.text + '\n'
+    return text
+
+# 이미지에서 텍스트 추출 (OCR)
+def extract_text_from_image(file_content):
+    image = Image.open(file_content)
+    return "이미지에서 텍스트를 추출하는 기능은 구현되지 않았습니다."
+
+# 프롬프트를 구성하고 LLM에 전달하는 함수
+def create_prompt_and_send_to_llm(api_key, title, request, file_data):
+    openai.api_key = api_key
+
+    # 프롬프트 템플릿 구성
+    prompt = f"""
+    보고서 제목은 '{title}'로 하고, 이 파일에서 '{request}'를 만족할 수 있도록 최적화된 보고서를 완성해.
+    파일 데이터: {file_data}
+    """
+
+    # LLM에 프롬프트 전달하고 응답 받기
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=1500
+    )
+
+    return response['choices'][0]['message']['content']
+
+# 1. 프레임: GitHub 정보 저장 및 OpenAI API 키 저장
+st.subheader("1. GitHub 정보 저장 및 OpenAI API 키 저장")
+
+col1, col2 = st.columns(2)  # 두 개의 컬럼으로 나눔
+
+# GitHub 정보 저장
+with col1:
+    st.subheader("GitHub 정보 입력")
+    repo_input = st.text_input("GitHub 저장소 (owner/repo 형식)", value="")  # 공백으로 설정
+    branch_input = st.text_input("GitHub 브랜치", value="main")
+    token_input = st.text_input("GitHub Token", type="password")
+
+    if st.button("GitHub 정보 저장"):
+        if repo_input and branch_input and token_input:
+            st.session_state["github_repo"] = repo_input
+            st.session_state["github_branch"] = branch_input
+            st.session_state["github_token"] = token_input
+            st.success("GitHub 정보가 성공적으로 저장되었습니다!")
         else:
-            for idx, row in enumerate(rows):
-                # LLM 프롬프트 생성
-                prompt = f"제목: {row['제목']}\n요청: {row['요청']}\n데이터 경로: {row['데이터']}"
-                # GPT-4 모델에 프롬프트 전달 (예시, 실제로는 OpenAI API 호출 필요)
-                llm_results[idx] = f"LLM 응답 결과 값 {idx + 1}"
-            st.success("LLM 요청이 완료되었습니다.")
+            st.error("모든 GitHub 정보를 입력해야 합니다!")
 
-# 4. 결과 보고서 화면
-with col3:
-    st.subheader("4. 결과 보고서")
-    if llm_results:
-        for idx, result in llm_results.items():
-            st.text(f"제목 {rows[idx]['제목']}")
-            st.text(f"LLM 응답 결과: {result}")
-    if st.button("Export"):
-        file_type = st.selectbox("파일 형식 선택", options=["pdf", "docx", "xlsx", "txt"])
-        st.success(f"{file_type} 형식으로 파일 다운로드 가능")
+# OpenAI API 키 저장
+with col2:
+    st.subheader("OpenAI API 키 저장")
+    api_key_input = st.text_input("OpenAI API 키를 입력하세요", type="password")
+    if st.button("API 키 저장"):
+        if api_key_input:
+            st.session_state["api_key"] = api_key_input
+            os.environ["OPENAI_API_KEY"] = api_key_input
+            st.success("API 키가 성공적으로 저장되었습니다!")
+        else:
+            st.error("API 키를 입력해야 합니다!")
 
-# 6. 저장
-with col3:
-    st.subheader("6. 저장")
-    if st.button("저장"):
-        save_path = st.text_input("저장할 파일명 입력")
-        if save_path:
-            df.to_csv(f"{save_path}.csv")
-            st.success(f"{save_path}.csv 파일로 저장되었습니다.")
+# 2. 프레임: 작성 보고서 요청사항과 실행 버튼
+st.subheader("2. 작성 보고서 요청사항 및 실행 버튼")
 
-# 7. 불러오기
-with col3:
-    st.subheader("7. 불러오기")
-    uploaded_save_file = st.file_uploader("저장된 CSV 파일 불러오기")
-    if uploaded_save_file is not None:
-        loaded_data = pd.read_csv(uploaded_save_file)
-        st.dataframe(loaded_data)
-        st.success("데이터가 불러와졌습니다.")
+col1, col2 = st.columns([0.8, 0.2])  # 가로 길이 80%, 20%
+
+# 작성 보고서 요청사항 테이블
+with col1:
+    st.write("제목")
+    title = st.text_input("", value="", disabled=False)
+
+    st.write("요청")
+    request = st.text_area("", disabled=False)
+
+    st.write("파일")
+    selected_file = None
+    if "github_token" in st.session_state:
+        files = get_github_files(st.session_state["github_repo"], st.session_state["github_branch"], st.session_state["github_token"])
+        if files:
+            selected_file = st.selectbox("GitHub 파일을 선택하세요", ["파일을 선택하세요"] + files, index=0)
+        else:
+            st.info("저장소에 파일이 없습니다.")
+    
+    st.write("데이터")
+    if selected_file and selected_file != "파일을 선택하세요":
+        file_path = selected_file
+        file_content = get_file_from_github(st.session_state["github_repo"], st.session_state["github_branch"], file_path, st.session_state["github_token"])
+        file_type = file_path.split('.')[-1].lower()
+        file_data = extract_data_from_file(file_content, file_type)
+        st.text_input("", value=f"선택한 파일 경로: {selected_file}", disabled=True)
+
+# 실행 버튼
+with col2:
+    st.write(" ")
+    st.write(" ")
+    if st.button("실행"):
+        if not st.session_state.get("api_key"):
+            st.error("먼저 OpenAI API 키를 입력하고 저장하세요!")
+        elif not title or not request or selected_file == "파일을 선택하세요":
+            st.error("제목, 요청사항, 또는 파일을 선택해야 합니다!")
+        else:
+            response = create_prompt_and_send_to_llm(st.session_state["api_key"], title, request, file_data)
+            st.session_state["response"] = response
+
+# 3. 프레임: 결과 보고서
+st.subheader("3. 결과 보고서")
+if "response" in st.session_state:
+    st.text_area("응답:", value=st.session_state["response"], height=300)
