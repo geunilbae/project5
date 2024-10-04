@@ -14,7 +14,7 @@ import base64
 import urllib.parse  # URL 인코딩을 위해 추가
 from openai.error import RateLimitError
 from langchain.chat_models import ChatOpenAI
-import time  # time 모듈 추가
+import time
 
 # 전역변수로 프롬프트 저장
 global_generated_prompt = []
@@ -33,6 +33,48 @@ def get_github_files(repo, branch, token):
     else:
         st.error("GitHub 파일 목록을 가져오지 못했습니다. 저장소 정보나 토큰을 확인하세요.")
         return []
+
+# GitHub에서 파일의 SHA 값을 가져오는 함수
+def get_file_sha(repo, file_path, token, branch='main'):
+    encoded_file_path = urllib.parse.quote(file_path)
+    url = f"https://api.github.com/repos/{repo}/contents/{encoded_file_path}?ref={branch}"
+    headers = {"Authorization": f"token {token}"}
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        return response.json().get('sha', None)
+    else:
+        return None
+
+# GitHub에 파일 업로드 함수
+def upload_file_to_github(repo, folder_name, file_name, file_content, token, branch='main', sha=None):
+    encoded_file_name = urllib.parse.quote(file_name)
+    url = f"https://api.github.com/repos/{repo}/contents/{folder_name}/{encoded_file_name}"
+    headers = {
+        "Authorization": f"token {token}",
+        "Content-Type": "application/json"
+    }
+
+    content_encoded = base64.b64encode(file_content).decode('utf-8')
+
+    data = {
+        "message": f"Upload {file_name}",
+        "content": content_encoded,
+        "branch": branch
+    }
+
+    if sha:
+        data["sha"] = sha
+
+    response = requests.put(url, json=data, headers=headers)
+
+    if response.status_code == 201:
+        st.success(f"{file_name} 파일이 성공적으로 업로드되었습니다.")
+    elif response.status_code == 200:
+        st.success(f"{file_name} 파일이 성공적으로 덮어쓰기 되었습니다.")
+    else:
+        st.error(f"파일 업로드에 실패했습니다: {response.status_code}")
+        st.error(response.json())
 
 # GitHub에서 파일을 다운로드하는 함수
 def get_file_from_github(repo, branch, filepath, token):
