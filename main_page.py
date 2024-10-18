@@ -9,8 +9,15 @@ import openpyxl
 
 
 # 사이드바에 메뉴 추가
-page = st.sidebar.title("CheokCeock1")
+st.sidebar.markdown(
+    """
+    <h1 style='text-align: center; color: red;'>📊 CheokCeock1 </h1>
+    <p style='color: blue; font-size: 18px;'>여기에 설명을 입력하세요.</p>
+    """,
+    unsafe_allow_html=True
+)
 page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', '업무 보고서 자동화 완성', '보고서 비교분석 자동 완성'])
+
 
 # 홈 페이지 설정
 if page == '프로젝트 및 팀원소개':
