@@ -63,7 +63,7 @@ if page == '프로젝트 및 팀원소개':
         st.markdown("### 정도용 차장(내부통제지원팀)")
         st.markdown("""
             **역할**: 데이터 분석가👨‍💻  
-            **소개**: 데이터 분석 및 머신러닝 모델 개발을 담당합니다.
+            **소개**: 정도용 팀원의 심도 있는 데이터 분석 능력은 프로젝트의 핵심 인사이트를 도출하는 데 큰 도움이 되었습니다.  
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선    
         
