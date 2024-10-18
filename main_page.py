@@ -41,14 +41,14 @@ if page == '프로젝트 및 팀원소개':
     col1, col2 = st.columns(2)
 
     with col1:
-        st.image("team_member1.jpg", width=150)  # 팀원 1의 이미지 경로
+#        st.image("team_member1.jpg", width=150)  # 팀원 1의 이미지 경로
         st.markdown("### 팀원 1")
         st.markdown("""
             **역할**: 팀 리더  
             **소개**: 프로젝트 전반을 총괄하고 팀을 이끌어가는 역할을 담당합니다.
         """)
 
-        st.image("team_member2.jpg", width=150)  # 팀원 2의 이미지 경로
+#        st.image("team_member2.jpg", width=150)  # 팀원 2의 이미지 경로
         st.markdown("### 팀원 2")
         st.markdown("""
             **역할**: 백엔드 개발자  
@@ -56,14 +56,14 @@ if page == '프로젝트 및 팀원소개':
         """)
 
     with col2:
-        st.image("team_member3.jpg", width=150)  # 팀원 3의 이미지 경로
+#        st.image("team_member3.jpg", width=150)  # 팀원 3의 이미지 경로
         st.markdown("### 팀원 3")
         st.markdown("""
             **역할**: 프론트엔드 개발자  
             **소개**: 사용자 인터페이스와 사용자 경험 설계를 담당합니다.
         """)
 
-        st.image("team_member4.jpg", width=150)  # 팀원 4의 이미지 경로
+#        st.image("team_member4.jpg", width=150)  # 팀원 4의 이미지 경로
         st.markdown("### 팀원 4")
         st.markdown("""
             **역할**: 데이터 분석가  
