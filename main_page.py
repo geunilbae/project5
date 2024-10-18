@@ -14,35 +14,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 # page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', '업무 보고서 자동화 완성', '보고서 비교분석 자동 완성'])
-# CSS 스타일을 추가하여 selectbox 배경과 외형을 꾸밈
-st.sidebar.markdown(
-    """
-    <style>
-    .custom-box {
-        background-color: #f0f2f6;
-        padding: 10px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .custom-title {
-        color: #007BFF;
-        text-align: center;
-        font-size: 20px;
-        font-weight: bold;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
-# 꾸며진 제목과 selectbox
-st.sidebar.markdown("<p class='custom-title'>옵션 선택</p>", unsafe_allow_html=True)
-with st.sidebar:
-    st.markdown("<div class='custom-box'>", unsafe_allow_html=True)
-    option = st.selectbox('옵션을 선택하세요', ('옵션 1', '옵션 2', '옵션 3'))
-    st.markdown("</div>", unsafe_allow_html=True)
-
-st.write('선택한 옵션:', option)
 
 
 # 홈 페이지 설정
