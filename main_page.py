@@ -7,9 +7,6 @@ import time
 import openpyxl
 #github_info_loaded = bd.load_env_info()
 
-github_token = os.getenv("GITHUB_TOKEN")
-openai_api_key = os.getenv("OPENAI_API_KEY")
-
 # 첫 번째 섹션: 웹 페이지 선택
 st.sidebar.header("Section 1: Choose a Webpage")
 url_options = {
