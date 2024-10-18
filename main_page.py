@@ -55,7 +55,7 @@ if page == '프로젝트 및 팀원소개':
             **역할**: 팀 리더👑  
             **소개**: 고종현 팀장은 풍부한 경험과 탁월한 리더십으로 팀을 이끌었고, 그의 전략적 사고와 문제 해결 능력은 프로젝트의 성공적으로 이끌었습니다.  
         """)
-        st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
+#        st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
 
     # 팀원 2 소개
     with st.container():
@@ -65,7 +65,7 @@ if page == '프로젝트 및 팀원소개':
             **역할**: 데이터 분석가👨‍💻  
             **소개**: 정도용 팀원의 심도 있는 데이터 분석 능력은 프로젝트의 핵심 인사이트를 도출하는 데 큰 도움이 되었습니다.  
         """)
-        st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선    
+#        st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선    
         
     # 팀원 3 소개
     with st.container():
@@ -85,7 +85,7 @@ if page == '프로젝트 및 팀원소개':
             **역할**: 백엔드 개발자👨‍💻  
             **소개**: 배근일 팀원의 서버 및 데이터베이스 관리 능력은 프로젝트의 백엔드 구성에 큰 도움이 되었습니다.        
         """)
-        st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
+#        st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
 
 
 
