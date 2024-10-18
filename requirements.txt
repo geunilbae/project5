@@ -94,3 +94,13 @@ requests
 python-pptx
 docx2txt
 openpyxl
+SpeechRecognition
+pydub
+boto3
+plotly
+numpy
+youtube-transcript-api
+pytube
+git+https://github.com/pytube/pytube
+yt-dlp
+
