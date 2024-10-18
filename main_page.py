@@ -42,7 +42,7 @@ if page == '프로젝트 및 팀원소개':
 #        st.image("team_member1.jpg", width=150)  # 팀원 1의 이미지 경로
         st.markdown("### 고종현 과장(인프라보안팀)")
         st.markdown("""
-            **역할**: 팀 리더 👑   
+            **역할**: 팀 리더  
             **소개**: 프로젝트 전반을 총괄하고 팀을 이끌어가는 역할을 담당합니다.
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
@@ -52,7 +52,7 @@ if page == '프로젝트 및 팀원소개':
 #        st.image("team_member2.jpg", width=150)
         st.markdown("### 정도용 차장(내부통제지원팀)")
         st.markdown("""
-            **역할**: 데이터 분석가 👨‍💻  
+            **역할**: 데이터 분석가  
             **소개**: 데이터 분석 및 머신러닝 모델 개발을 담당합니다.
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선    
@@ -62,7 +62,7 @@ if page == '프로젝트 및 팀원소개':
 #        st.image("team_member3.jpg", width=150)  # 팀원 3의 이미지 경로
         st.markdown("### 김상영 대리(외환팀)")
         st.markdown("""
-            **역할**: 프론트엔드 개발자 👨‍💻  
+            **역할**: 프론트엔드 개발자  
             **소개**: 사용자 인터페이스와 사용자 경험 설계를 담당합니다.
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
@@ -72,7 +72,7 @@ if page == '프로젝트 및 팀원소개':
 #        st.image("team_member4.jpg", width=150)  # 팀원 4의 이미지 경로
         st.markdown("### 배근일 대리(인프라팀)")
         st.markdown("""
-            **역할**: 백엔드 개발자 👨‍💻  
+            **역할**: 백엔드 개발자  
             **소개**: 서버 및 데이터베이스 관리와 API 개발을 담당합니다.        
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
