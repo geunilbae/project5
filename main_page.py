@@ -11,8 +11,7 @@ import openpyxl
 # 사이드바에 메뉴 추가
 st.sidebar.markdown(
     """
-    <h1 style='text-align: center; color: red;'>📊 CheokCeock1 </h1>
-    <p style='color: blue; font-size: 18px;'>여기에 설명을 입력하세요.</p>
+    <h1 style='text-align: center; color:#000000;'>📝 CheokCeock1 </h1>
     """,
     unsafe_allow_html=True
 )
