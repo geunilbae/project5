@@ -73,7 +73,7 @@ if page == '프로젝트 및 팀원소개':
         st.markdown("### 김상영 대리(외환팀)")
         st.markdown("""
             **역할**: 프론트엔드 개발자👨‍💻  
-            **소개**: 김상영 팀원의 혁신적인 아이디어와 효율적인 개발 능력은 프로젝트의 성공에 기여했습니다.  
+            **소개**: 김상영 팀원의 혁신적인 아이디어와 효율적인 개발 능력은 프로젝트의 성공적인 개발에 기여했습니다.  
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
 
@@ -83,7 +83,7 @@ if page == '프로젝트 및 팀원소개':
         st.markdown("### 배근일 대리(인프라팀)")
         st.markdown("""
             **역할**: 백엔드 개발자👨‍💻  
-            **소개**: 서버 및 데이터베이스 관리와 API 개발을 담당합니다.        
+            **소개**: 배근일 팀원의 서버 및 데이터베이스 관리 능력은 프로젝트의 백엔드 구성에 큰 도움이 되었습니다.        
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
 
