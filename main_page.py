@@ -38,7 +38,8 @@ if page == '프로젝트 및 팀원소개':
     with st.container():
         st.markdown("### CheokCeock1")
         st.markdown("""
-            **추진 배경**: 1. 매일 반복적이고 고정된 형식의 업무 처리 및 보고서 작성 수행을 보다 효율적으로 자동화하여 시간 절약 및 정확도를 개선 하기 위함.    
+            **추진 배경**  
+            **1. 매일 반복적이고 고정된 형식의 업무 처리 및 보고서 작성 수행을 보다 효율적으로 자동화하여 시간 절약 및 정확도를 개선 하기 위함.**  
             **소개**: 프로젝트 전반을 총괄하고 팀을 이끌어가는 역할을 담당합니다.
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
