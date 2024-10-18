@@ -53,7 +53,7 @@ if page == '프로젝트 및 팀원소개':
         st.markdown("### 고종현 과장(인프라보안팀)")
         st.markdown("""
             **역할**: 팀 리더👑  
-            **소개**: 프로젝트 전반을 총괄하고 팀을 이끌어가는 역할을 담당합니다.
+            **소개**: 고종현 팀장은 풍부한 경험과 탁월한 리더십으로 팀을 이끌었고, 그의 전략적 사고와 문제 해결 능력은 프로젝트의 성공적으로 이끌었습니다.  
         """)
         st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)  # 구분선
 
