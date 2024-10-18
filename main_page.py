@@ -6,15 +6,20 @@ import datetime
 import time
 import openpyxl
 
+# 하나은행 로고 URL (예시로서 사용하는 이미지 URL입니다. 실제 하나은행 로고 이미지의 URL을 사용해야 합니다.)
+logo_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Hana_Bank_logo.svg/1200px-Hana_Bank_logo.svg.png"
 
-
-# 사이드바에 메뉴 추가
+# 사이드바 제목
 st.sidebar.markdown(
-    """
-    <h1 style='text-align: center; color:#000000;'>📝 CheokCeock1 </h1>
+    f"""
+    <h1 style='text-align: center; color:#000000;'>
+        <img src="{logo_url}" alt="하나은행 로고" width="50" height="50">
+        CheokCeock1
+    </h1>
     """,
     unsafe_allow_html=True
 )
+
 page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', '업무 보고서 자동화 완성', '보고서 비교분석 자동 완성'])
 
 
