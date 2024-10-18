@@ -10,9 +10,9 @@ import openpyxl
 # 첫 번째 섹션: 웹 페이지 선택
 st.sidebar.header("Section 1: Choose a Webpage")
 url_options = {
-    "Google": "https://www.google.com",
-    "Wikipedia": "https://www.wikipedia.org",
-    "Streamlit": "https://www.streamlit.io"
+    "Page1": "https://cheokcheok101py-3dfsncgsxm7qqz8tmaqt8y.streamlit.app/",
+    "Page2": "https://cheokcheok102py-ubq3swbcmet64wqnmtzvhp.streamlit.app/,
+
 }
 
 # 첫 번째 섹션에서 선택된 URL 가져오기
