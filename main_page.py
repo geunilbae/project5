@@ -35,6 +35,12 @@ if page == '프로젝트 및 팀원소개':
 
     # 팀원 소개 섹션
     st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)
+    st.markdown("## 프로젝트 소개")    
+
+    
+
+    # 팀원 소개 섹션
+    st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)
     st.markdown("## 팀원 소개")
 
     # 팀원 1 소개
