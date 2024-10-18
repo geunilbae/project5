@@ -11,7 +11,7 @@ import openpyxl
 st.sidebar.header("Section 1: Choose a Webpage")
 url_options = {
     "Page1": "https://cheokcheok101py-3dfsncgsxm7qqz8tmaqt8y.streamlit.app/",
-    "Page2": "https://cheokcheok102py-ubq3swbcmet64wqnmtzvhp.streamlit.app/,
+    "Page2": "https://cheokcheok102py-ubq3swbcmet64wqnmtzvhp.streamlit.app/"
 
 }
 
