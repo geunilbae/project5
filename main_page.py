@@ -1,14 +1,22 @@
 import streamlit as st
+import importlib
 
-# 사이드바에서 선택 상자 생성
-page = st.sidebar.selectbox('Navigate', ['Select an option', 'Go to Site 1', 'Go to Site 2'])
+# 사이드바에 메뉴 추가
+page = st.sidebar.selectbox('Choose a page', ['Home', 'Page 1', 'Page 2'])
 
-# 첫 번째 메뉴 선택시 Site 1로 리디렉션
-if page == 'Go to Site 1':
-    st.write("Redirecting to Site 1...")
-    st.markdown(f"<meta http-equiv='refresh' content='0; url=https://cheokcheok101py-3dfsncgsxm7qqz8tmaqt8y.streamlit.app/'>", unsafe_allow_html=True)
+# 홈 페이지 설정
+if page == 'Home':
+    st.title("Welcome to the Home Page")
+    st.write("This is the main page of the application.")
 
-# 두 번째 메뉴 선택시 Site 2로 리디렉션
-elif page == 'Go to Site 2':
-    st.write("Redirecting to Site 2...")
-    st.markdown(f"<meta http-equiv='refresh' content='0; url=https://cheokcheok102py-ubq3swbcmet64wqnmtzvhp.streamlit.app/'>", unsafe_allow_html=True)
+# Page 1 선택 시 'cheokcheok1_01.py' 실행
+elif page == 'Page 1':
+    st.title("Page 1")
+    cheokcheok1_01 = importlib.import_module('cheokcheok1_01')
+    cheokcheok1_01.show()
+
+# Page 2 선택 시 'cheokcheok1_02.py' 실행
+elif page == 'Page 2':
+    st.title("Page 2")
+    cheokcheok1_02 = importlib.import_module('cheokcheok1_02')
+    cheokcheok1_02.show()
