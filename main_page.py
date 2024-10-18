@@ -5,15 +5,7 @@ import backend as bd
 import datetime
 import time
 import openpyxl
-#github_info_loaded = bd.load_env_info()
 
-# 첫 번째 섹션: 웹 페이지 선택
-st.sidebar.header("Section 1: Choose a Webpage")
-url_options = {
-    "Page1": "https://cheokcheok101py-3dfsncgsxm7qqz8tmaqt8y.streamlit.app/",
-    "Page2": "https://cheokcheok102py-ubq3swbcmet64wqnmtzvhp.streamlit.app/"
-
-}
 
 # 첫 번째 섹션에서 선택된 URL 가져오기
 selected_page = st.sidebar.selectbox("Choose a page to display", list(url_options.keys()))
