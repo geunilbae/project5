@@ -13,7 +13,19 @@ page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', '
 
 # 홈 페이지 설정
 if page == '프로젝트 및 팀원소개':
-    st.title("프로젝트 및 팀원소개")
+     # 1 프레임
+     # 보고서 타이틀
+     col1, col2 = st.columns([0.55,0.45])
+     with col1:
+         st.markdown(
+             "<p style='font-size:25px; font-weight:bold; color:#000000;'>프로젝트 및 팀원소개 </p>",
+             unsafe_allow_html=True
+         )
+     with col2:
+         st.markdown(
+             "<div style='text-align:right;width:100%;'><p style='font-size:13px; font-weight:normal; color:#aaaaaa; margin-top:10px;'>by <b style='font-size:16px;color:#0099FF'>CheokCeock</b><b style='font-size:22px;color:#009999'>1</b> <b style='font-size:14px;'>prototype v.01</b></p></div>",
+             unsafe_allow_html=True
+         )
 
 # Page 1 선택 시 'cheokcheok1_01.py' 실행
 elif page == '업무 보고서 자동화 완성':
