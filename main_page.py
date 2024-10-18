@@ -9,14 +9,14 @@ import openpyxl
 
 
 # 사이드바에 메뉴 추가
-page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', 'Page 1', 'Page 2'])
+page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', '업무 보고서 자동화 완성', '보고서 비교분석 자동 완성'])
 
 # 홈 페이지 설정
 if page == '프로젝트 및 팀원소개':
     st.title("프로젝트 및 팀원소개")
 
 # Page 1 선택 시 'cheokcheok1_01.py' 실행
-elif page == 'Page 1':
+elif page == '업무 보고서 자동화 완성':
      # GitHub 정보가 있는지 확인하고 파일 업로드 객체를 출력
      github_info_loaded = bd.load_env_info()
      
@@ -566,7 +566,7 @@ elif page == 'Page 1':
 
 
 # Page 2 선택 시 'cheokcheok1_02.py' 실행
-elif page == 'Page 2':
+elif page == '보고서 비교분석 자동 완성':
      # GitHub 정보가 있는지 확인하고 파일 업로드 객체를 출력
      github_info_loaded = bd.load_env_info()
      
