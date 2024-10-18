@@ -16,6 +16,12 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+st.sidebar.markdown(
+    """
+    <img src="https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.s-d.kr%2Fnews%2FarticleView.html%3Fidxno%3D64088&psig=AOvVaw0ok7iPapJ0g0NLJBUW8VPT&ust=1729321692324000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOCcsLyvl4kDFQAAAAAdAAAAABAX;">
+    """,
+    unsafe_allow_html=True
+)
 page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', '업무 보고서 자동화 완성', '보고서 비교분석 자동 완성'])
 
 
