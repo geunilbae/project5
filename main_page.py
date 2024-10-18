@@ -36,6 +36,7 @@ if page == '프로젝트 및 팀원소개':
     st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)
     st.markdown("## 프로젝트 소개")    
     with st.container():
+        st.image("checkcheck.jpg", width=150)
         st.markdown("### CheokCeock1")
         st.markdown("""
             **추진 배경**  
