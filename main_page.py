@@ -19,19 +19,57 @@ page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', '
 
 # 홈 페이지 설정
 if page == '프로젝트 및 팀원소개':
-     # 1 프레임
-     # 보고서 타이틀
-     col1, col2 = st.columns([0.55,0.45])
-     with col1:
-         st.markdown(
-             "<p style='font-size:25px; font-weight:bold; color:#000000;'>프로젝트 및 팀원소개 </p>",
-             unsafe_allow_html=True
-         )
-     with col2:
-         st.markdown(
-             "<div style='text-align:right;width:100%;'><p style='font-size:13px; font-weight:normal; color:#aaaaaa; margin-top:10px;'>by <b style='font-size:16px;color:#0099FF'>CheokCeock</b><b style='font-size:22px;color:#009999'>1</b> <b style='font-size:14px;'>prototype v.01</b></p></div>",
-             unsafe_allow_html=True
-         )
+    # 1 프레임
+    # 보고서 타이틀
+    col1, col2 = st.columns([0.55, 0.45])
+    with col1:
+        st.markdown(
+            "<p style='font-size:25px; font-weight:bold; color:#000000;'>프로젝트 및 팀원소개 </p>",
+            unsafe_allow_html=True
+        )
+    with col2:
+        st.markdown(
+            "<div style='text-align:right;width:100%;'><p style='font-size:13px; font-weight:normal; color:#aaaaaa; margin-top:10px;'>by <b style='font-size:16px;color:#0099FF'>CheokCeock</b><b style='font-size:22px;color:#009999'>1</b> <b style='font-size:14px;'>prototype v.01</b></p></div>",
+            unsafe_allow_html=True
+        )
+
+    # 팀원 소개 섹션
+    st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)
+    st.markdown("## 팀원 소개")
+    
+    # 2x2 레이아웃으로 팀원 4명 소개
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.image("team_member1.jpg", width=150)  # 팀원 1의 이미지 경로
+        st.markdown("### 팀원 1")
+        st.markdown("""
+            **역할**: 팀 리더  
+            **소개**: 프로젝트 전반을 총괄하고 팀을 이끌어가는 역할을 담당합니다.
+        """)
+
+        st.image("team_member2.jpg", width=150)  # 팀원 2의 이미지 경로
+        st.markdown("### 팀원 2")
+        st.markdown("""
+            **역할**: 백엔드 개발자  
+            **소개**: 서버 및 데이터베이스 관리와 API 개발을 담당합니다.
+        """)
+
+    with col2:
+        st.image("team_member3.jpg", width=150)  # 팀원 3의 이미지 경로
+        st.markdown("### 팀원 3")
+        st.markdown("""
+            **역할**: 프론트엔드 개발자  
+            **소개**: 사용자 인터페이스와 사용자 경험 설계를 담당합니다.
+        """)
+
+        st.image("team_member4.jpg", width=150)  # 팀원 4의 이미지 경로
+        st.markdown("### 팀원 4")
+        st.markdown("""
+            **역할**: 데이터 분석가  
+            **소개**: 데이터 분석 및 머신러닝 모델 개발을 담당합니다.
+        """)
+
 
 # Page 1 선택 시 'cheokcheok1_01.py' 실행
 elif page == '업무 보고서 자동화 완성':
