@@ -7,13 +7,6 @@ import time
 import openpyxl
 
 
-# 첫 번째 섹션에서 선택된 URL 가져오기
-selected_page = st.sidebar.selectbox("Choose a page to display", list(url_options.keys()))
-
-# 메인 화면에 선택된 페이지 표시
-st.markdown(f"""
-    <iframe src="{url_options[selected_page]}" width="100%" height="100%"></iframe>
-""", unsafe_allow_html=True)
 
 # 사이드바에 메뉴 추가
 page = st.sidebar.selectbox('Choose a page', ['Home', 'Page 1', 'Page 2'])
