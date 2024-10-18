@@ -9,12 +9,11 @@ import openpyxl
 
 
 # 사이드바에 메뉴 추가
-page = st.sidebar.selectbox('Choose a page', ['Home', 'Page 1', 'Page 2'])
+page = st.sidebar.selectbox('Choose a page', ['프로젝트 및 팀원소개', 'Page 1', 'Page 2'])
 
 # 홈 페이지 설정
-if page == 'Home':
-    st.title("Welcome to the Home Page")
-    st.write("This is the main page of the application.")
+if page == '프로젝트 및 팀원소개':
+    st.title("프로젝트 및 팀원소개")
 
 # Page 1 선택 시 'cheokcheok1_01.py' 실행
 elif page == 'Page 1':
