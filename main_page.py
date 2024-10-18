@@ -5,7 +5,7 @@ import backend as bd
 import datetime
 import time
 import openpyxl
-
+github_info_loaded = bd.load_env_info()
 # 사이드바에 메뉴 추가
 page = st.sidebar.selectbox('Choose a page', ['Home', 'Page 1', 'Page 2'])
 
@@ -17,7 +17,7 @@ if page == 'Home':
 # Page 1 선택 시 'cheokcheok1_01.py' 실행
 elif page == 'Page 1':
      # GitHub 정보가 있는지 확인하고 파일 업로드 객체를 출력
-     github_info_loaded = bd.load_env_info()
+     #github_info_loaded = bd.load_env_info()
      
      # 업로드 가능한 파일 크기 제한 (100MB)
      MAX_FILE_SIZE_MB = 100
@@ -567,7 +567,7 @@ elif page == 'Page 1':
 # Page 2 선택 시 'cheokcheok1_02.py' 실행
 elif page == 'Page 2':
      # GitHub 정보가 있는지 확인하고 파일 업로드 객체를 출력
-     github_info_loaded = bd.load_env_info()
+     #github_info_loaded = bd.load_env_info()
      
      # 업로드 가능한 파일 크기 제한 (100MB)
      MAX_FILE_SIZE_MB = 100
