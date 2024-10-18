@@ -70,7 +70,7 @@ if page == '프로젝트 및 팀원소개':
     # 팀원 4 소개
     with st.container():
 #        st.image("team_member4.jpg", width=150)  # 팀원 4의 이미지 경로
-        st.markdown("### 배근일 대리(네트워크팀)")
+        st.markdown("### 배근일 대리(인프라팀)")
         st.markdown("""
             **역할**: 👨‍💻 백엔드 개발자  
             **소개**: 서버 및 데이터베이스 관리와 API 개발을 담당합니다.        
