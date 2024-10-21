@@ -51,7 +51,7 @@ global_generated_prompt = []
 def load_env_info():
     json_data = '''
     {
-        "github_repo": "geunilbae/project5",
+        "github_repo": "soryhon/hanachatbot",
         "github_branch": "main"
     }
     '''
@@ -1442,7 +1442,7 @@ def run_llm_with_audio_and_prompt(api_key, titles, requests, audio_data_str):
     except Exception as e:
         st.error(f"LLM 실행 중 오류가 발생했습니다: {str(e)}")
 
-    return respons기
+    return respons
     
 def get_audio_template_files_list(repo, branch, token):
     template_folder = "audioTemplateFiles"
