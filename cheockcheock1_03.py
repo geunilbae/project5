@@ -79,7 +79,7 @@ if github_info_loaded:
             with col1:
                 st.write("")
                 st.markdown(
-                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>등록된<br/>보고서명 선택 </p>",
+                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;border:1px solid #E7EAF1;margin-top:10px;border-radius:5px;'>등록된<br/>보고서명 선택 </p>",
                     unsafe_allow_html=True
                 )
             with col2:
@@ -121,7 +121,7 @@ if github_info_loaded:
             with col1:
                 st.write("")
                 st.markdown(
-                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>저장된 보고서<br/>양식 불러오기</p>",
+                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;border:1px solid #E7EAF1;margin-top:10px;border-radius:5px;'>저장된 보고서<br/>양식 불러오기</p>",
                     unsafe_allow_html=True
                 )
             with col2:    
@@ -153,7 +153,7 @@ if github_info_loaded:
                         
                         template_data = bd.load_audio_template_from_github(repo, branch, token, selected_template)
                         if template_data:
-                            bd.apply_template_to_session_state(f"audioTemplateFiles/{selected_template}")
+                            bd.apply_audioTemplate_to_session_state(f"audioTemplateFiles/{selected_template}")
                             #st.success(f"{selected_template} 양식을 성공적으로 불러왔습니다.")
 
         with tab3:
@@ -161,7 +161,7 @@ if github_info_loaded:
             with col1:
                 st.write("")
                 st.markdown(
-                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>새로운 보고서명<br/>만들기</p>",
+                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;border:1px solid #E7EAF1;margin-top:10px;border-radius:5px;'>새로운 보고서명<br/>만들기</p>",
                     unsafe_allow_html=True
                 )
             with col2:
@@ -209,6 +209,7 @@ else:
 col1, col2, col3 = st.columns([0.2, 0.6, 0.2])
 with col1:
     st.write("")
+
 with col2:   
     report_title = "작성할 보고서를 선택하세요."
     title_style="font-size:15px; font-weight:normal; color:#cccccc;border: 1px solid #dddddd;letter-spacing: 1px;"
@@ -223,7 +224,7 @@ with col2:
    
 with col3:
     st.write("")
-
+    
 # 4 프레임
 # 작성 보고서 요청사항 세부타이틀
 st.markdown(
@@ -239,14 +240,24 @@ st.markdown(
 with st.expander("⚙️ 요청사항 설정 / 파일 업로드", expanded=st.session_state['check_setting_03']):
     tab1, tab2 = st.tabs(["• 요청사항 및 기준일자 설정", "• ⬆️ 음성 파일 업로드"]) 
     with tab1:
-        col1, col2, col3 = st.columns([0.5, 0.25, 0.25])
+        col1, col2 = st.columns([0.5, 0.5])
         with col1:
             st.markdown(
-                "<p style='font-size:14px; font-weight:normal; color:#444444; margin-top:35px;text-align:left;'>✔️ 작성에 필요한 요청사항 갯수를 설정해주세요.</p>",
+                "<p style='font-size:14px; font-weight:normal; color:#444444; margin-top:0px;text-align:left;'>✔️ 작성에 필요한 요청사항 갯수를 설정해주세요.</p>",
                 unsafe_allow_html=True
             )
             
         with col2:
+            st.markdown(
+                "<p style='font-size:14px; font-weight:normal; color:#444444; margin-top:0px;text-align:left;'>✔️ 보고서 저장을 위해 기준일자를 설정해주세요.</p>",
+                unsafe_allow_html=True
+            )
+        st.markdown(
+              "<hr style='border-top:1px solid #dddddd;border-bottom:0px solid #dddddd;width:100%;padding:0px;margin:0px'></hr>",
+            unsafe_allow_html=True
+        )
+        col1, col2, col3 = st.columns([0.35, 0.35, 0.3])
+        with col1:
             # 요청사항 갯수 입력 (1-9)
             num_requests = st.number_input(
                 "🔢 요청사항 갯수 입력창",
@@ -256,7 +267,39 @@ with st.expander("⚙️ 요청사항 설정 / 파일 업로드", expanded=st.se
                 step=1,
                 key="num_requests_03"
             )
+        with col2:
+            # 오늘 날짜 가져오기
+            today = datetime.date.today()
+            
+            # 'report_date_str' 세션 값이 있는지 확인하고, 없으면 'YYYYMMDD' 형식으로 today 값 설정
+            if 'report_date_str_03' not in st.session_state:
+                st.session_state['report_date_str_03'] = today.strftime('%Y%m%d')
+            
+            
+            # 세션에 저장된 'YYYYMMDD' 형식을 date 객체로 변환
+            saved_date = today
+            # 날짜 문자열을 검사하여 잘못된 형식일 때 예외 처리
+            if 'report_date_str_03' in st.session_state and st.session_state['report_date_str_03']:
+                try:
+                    # 저장된 날짜 문자열이 있으면 파싱
+                    saved_date = datetime.datetime.strptime(st.session_state['report_date_str_03'], '%Y%m%d').date()
+                except ValueError:
+                    # 날짜 형식이 맞지 않으면 오늘 날짜로 설정
+                    st.warning("잘못된 날짜 형식입니다. 기본값으로 오늘 날짜를 사용합니다.")
+            else:
+                # 저장된 날짜가 없거나 빈 문자열일 경우 오늘 날짜로 설정
+                saved_date = today
         
+            report_date = st.date_input(
+                "📅 보고서 기준일자 선택",
+                value=saved_date,
+                min_value=datetime.date(2000, 1, 1),
+                max_value=today,
+                key="report_date_03"
+            )
+            # 날짜를 YYYYMMDD 형식으로 변환
+            # 날짜 데이터 메모리에 저장
+            st.session_state['report_date_str_03'] = report_date.strftime("%Y%m%d")
         with col3:
             st.markdown(
                 "<p style='font-size:18px; margin-top:27px;'></p>",
@@ -272,56 +315,7 @@ with st.expander("⚙️ 요청사항 설정 / 파일 업로드", expanded=st.se
                 st.session_state['check_setting_03']=False
                 st.session_state['html_report_03'] = ""
                 st.success(f"{st.session_state['num_requests_03']}개의 요청사항이 설정되었습니다.")
-        col1, col2 = st.columns([0.5, 0.5])
-        with col1 :
-            st.markdown(
-                "<hr style='border-top:1px solid #dddddd;border-bottom:0px solid #dddddd;width:100%;padding:0px;margin:0px'></hr>",
-                unsafe_allow_html=True
-            )      
-        with col2 :
-            st.markdown(
-                "<hr style='border-top:1px solid #dddddd;border-bottom:0px solid #dddddd;width:100%;padding:0px;margin:0px'></hr>",
-                unsafe_allow_html=True
-            )
-        col1, col2 = st.columns([0.5, 0.5])
-        with col1:
-            # 오늘 날짜 가져오기
-            today = datetime.date.today()
-            
-            # 'report_date_str' 세션 값이 있는지 확인하고, 없으면 'YYYYMMDD' 형식으로 today 값 설정
-            if 'report_date_str_03' not in st.session_state:
-                st.session_state['report_date_str_03'] = today.strftime('%Y%m%d')
-            
-            
-            # 세션에 저장된 'YYYYMMDD' 형식을 date 객체로 변환
-            saved_date = today
-            # 날짜 문자열을 검사하여 잘못된 형식일 때 예외 처리
-            if 'report_date_str_03' in st.session_state and st.session_state['report_date_str_03']:
-                try:
-                    # 저장된 날짜 문자열이 있으면 파싱
-                    saved_date = datetime.datetime.strptime(st.session_state['report_date_str'], '%Y%m%d').date()
-                except ValueError:
-                    # 날짜 형식이 맞지 않으면 오늘 날짜로 설정
-                    st.warning("잘못된 날짜 형식입니다. 기본값으로 오늘 날짜를 사용합니다.")
-            else:
-                # 저장된 날짜가 없거나 빈 문자열일 경우 오늘 날짜로 설정
-                saved_date = today
-        
-            report_date = st.date_input(
-                "📅 보고서 기준일자 선택",
-                value=saved_date,
-                min_value=datetime.date(2000, 1, 1),
-                max_value=today,
-                key="report_date"
-            )
-            # 날짜를 YYYYMMDD 형식으로 변환
-            # 날짜 데이터 메모리에 저장
-            st.session_state['report_date_str_03'] = report_date.strftime("%Y%m%d")
-        with col2:
-            st.markdown(
-                "<p style='font-size:14px; font-weight:normal; color:#444444; margin-top:35px;text-align:left;'>✔️ 보고서 저장을 위해 기준일자를 설정해주세요.</p>",
-                unsafe_allow_html=True
-            )
+
     with tab2:
 # 파일 업로드
         if github_info_loaded:
@@ -497,6 +491,7 @@ st.markdown(
 # 결과 보고서 LLM 응답 보기/ 결과 보고서 저장/ 보고서 양식 저장
 html_result_value = "<div id='html_result_value'>"
 with st.expander("📊 결과 보고서 보기", expanded=st.session_state['check_result_03']):
+    st.image("image/cheockcheock1_3.jpg",  use_column_width=False, width=130)
     tab1, tab2 = st.tabs(["• 🧠 AI 요약 보고서 ", "• 🔎 음성파일 텍스트 보기"])
     with tab1:   
         if "response_03" in st.session_state:

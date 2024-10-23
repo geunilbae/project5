@@ -28,9 +28,8 @@ if github_info_loaded:
         col1, col2 = st.columns([0.21, 0.79])
         with col1:
             st.write("")
-            st.write("")
             st.markdown(
-                "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>닉네임 또는 이름</p>",
+                "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;border:1px solid #E7EAF1;margin-top:10px;border-radius:5px;'>닉네임 또는 이름<br/>입력</p>",
                 unsafe_allow_html=True
             )
         with col2:
@@ -44,7 +43,7 @@ if github_info_loaded:
             st.write("")
         with col2:
             # 별점 선택 (슬라이더 사용)
-            score = st.slider("만족도 별점을 아래의 슬라이드바를 움직여서 선택해주세요. (1~5점 까지):", 1.0, 5.0, 1.0)
+            score = st.slider("✔ 만족도 별점을 아래의 슬라이드바를 움직여서 선택해주세요. (1~5점 까지):", 1.0, 5.0, 1.0)
         with col3:
             st.write("")   
         # score에 따라 이미지 설정
@@ -69,6 +68,20 @@ if github_info_loaded:
     col1, col2, col3 = st.columns([0.2, 0.6, 0.2])
     with col1:
         st.write("")
+        #st.image("image/cheockcheock1_61.jpg", width=100)
+        st.markdown(
+            f"""
+            <style>
+            .stApp {{
+                background-image: url(image/cheockcheock1_61.jpg);
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
     with col2:
         # 평가 버튼
         if st.button("🎯 평가하기", key="appraisal", use_container_width=True):
@@ -80,7 +93,14 @@ if github_info_loaded:
                 st.error("닉네임/이름과 별 개수 선택은 필수입니다.")
     with col3:
         st.write("")
-            
+        
+    col1, col2, col3 = st.columns([0.22, 0.56, 0.22]) 
+    with col1:
+        st.write("")
+    with col2:
+        st.image("image/cheockcheock1_61.jpg",  use_column_width=True)
+    with col3:
+        st.write("")
 else:
     st.warning("GitHub 정보가 설정되지 않았습니다. 먼저 GitHub Token을 입력해 주세요.")
 

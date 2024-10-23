@@ -13,15 +13,22 @@ with col1:
     )
 with col2:
     st.markdown(
-        "<div style='text-align:right;width:100%;'><p style='font-size:13px; font-weight:normal; color:#aaaaaa; margin-top:10px;'>by <b style='font-size:16px;color:#0099FF'>CheokCeock</b><b style='font-size:22px;color:#009999'>1</b> <b style='font-size:14px;'>prototype v.01</b></p></div>",
+        "<div style='text-align:right;width:100%;'><p style='font-size:13px; font-weight:normal; color:#aaaaaa; margin-top:10px;'>by <b style='font-size:16px;color:#0099FF'>CheockCheock</b><b style='font-size:22px;color:#009999'>1</b> <b style='font-size:14px;'>prototype v.01</b></p></div>",
         unsafe_allow_html=True
     )
 
 st.markdown("<hr style='border-top:1px solid #dddddd;'>", unsafe_allow_html=True)
 st.markdown("## 프로젝트 소개")    
 with st.container():
-    st.image("cheockcheock1.jpg", width=300)
-    st.markdown("### CheockCeock1")
+    col1, col2, col3 = st.columns([0.25,0.5,0.25])
+    with col1:
+        st.write()
+    with col2:
+        st.image("cheockcheock1.jpg", use_column_width=True)
+    with col3:
+        st.write()
+    
+    st.markdown("### CheockCheock1")
     st.markdown("""
         **추진 배경**  
         **매일 반복적이고 고정된 형식의 업무 처리 및 보고서 작성 수행을 보다 효율적으로 자동화하여 시간 절약 및 정확도를 개선 하기 위함.**  
