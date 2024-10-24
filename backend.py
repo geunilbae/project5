@@ -51,7 +51,7 @@ global_generated_prompt = []
 def load_env_info():
     json_data = '''
     {
-        "github_repo": "soryhon/hanachatbot",
+        "github_repo": "geunilbae/project5",
         "github_branch": "main"
     }
     '''
