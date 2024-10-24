@@ -42,16 +42,18 @@ if github_info_loaded:
     with st.expander("📝 보고서 선택", expanded=st.session_state['check_report']):
         tab1, tab2, tab3 = st.tabs(["• 등록된 보고서명 선택하기", "• 저장된 보고서 양식 불러오기","• 새로운 보고서명 만들기"])
         with tab1:
-            col1, col2 = st.columns([0.21, 0.79])
+            col1, col2 = st.columns([0.28, 0.72])
             with col1:
-                st.write("")
-                st.markdown(
-                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>등록된<br/>보고서명 선택 </p>",
-                    unsafe_allow_html=True
-                )
+                #st.write("")
+                #st.markdown(
+                    #"<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>등록된<br/>보고서명 선택 </p>",
+                    #unsafe_allow_html=True
+                #)
+                st.image("image/cheockcheock1_1.jpg",  use_column_width=False, width=180)
             with col2:
                 # 폴더 존재 확인 및 생성
-                
+                st.write("")
+                st.write("")
                 folder_list = bd.get_folder_list_from_github(st.session_state['github_repo'], st.session_state['github_branch'], st.session_state['github_token'])
                 # st.selectbox bd.위젯 생성 (이제 session_state['selected_folder'] 사용 가능)
     
@@ -85,14 +87,17 @@ if github_info_loaded:
                 #else:   
                     #st.warning("보고서명을 선택하세요.")
         with tab2:
-            col1, col2 = st.columns([0.21, 0.79])
+            col1, col2 = st.columns([0.28, 0.72])
             with col1:
+                #st.write("")
+                #st.markdown(
+                    #"<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>저장된 보고서<br/>양식 불러오기</p>",
+                    #unsafe_allow_html=True
+                #)
+                st.image("image/cheockcheock1_1.jpg",  use_column_width=False, width=180)
+            with col2:   
                 st.write("")
-                st.markdown(
-                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>저장된 보고서<br/>양식 불러오기</p>",
-                    unsafe_allow_html=True
-                )
-            with col2:    
+                st.write("")
                 repo = st.session_state["github_repo"]
                 branch = st.session_state["github_branch"]
                 token = st.session_state["github_token"]
@@ -125,16 +130,21 @@ if github_info_loaded:
                             #st.success(f"{selected_template} 양식을 성공적으로 불러왔습니다.")
 
         with tab3:
-            col1, col2, col3 = st.columns([0.21, 0.5,0.29])
+            col1, col2, col3 = st.columns([0.285, 0.5,0.215])
             with col1:
-                st.write("")
-                st.markdown(
-                    "<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>새로운 보고서명<br/>만들기</p>",
-                    unsafe_allow_html=True
-                )
+                #st.write("")
+                #st.markdown(
+                    #"<p style='font-size:14px; font-weight:bold; color:#000000;text-align:center;'>새로운 보고서명<br/>만들기</p>",
+                    #unsafe_allow_html=True
+                #)
+                st.image("image/cheockcheock1_1.jpg",  use_column_width=False, width=180)
             with col2:
+                st.write("")
+                st.write("")
                 new_folder_name = st.text_input("새로 등록할 보고서명 입력", max_chars=20, key="new_folder_name", value=st.session_state['new_folder_text'])
             with col3:
+                st.write("")
+                st.write("")
                 st.markdown(
                     "<p style='font-size:18px; margin-top:27px;'></p>",
                     unsafe_allow_html=True
