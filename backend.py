@@ -898,8 +898,8 @@ def apply_audioTemplate_to_session_state(file_name):
             template_data = json.load(f)
         
         # JSON 데이터에서 세션 상태 적용
-        selected_folder_name = template_data.get('selected_folder_name_03', '')
-        #num_requests = template_data.get('num_requests_03', 1)
+        selected_folder_name = template_data.get('selected_folder_name', '')
+        #num_requests = template_data.get('num_requests', 1)
         rows = template_data.get('rows', [])
         
         # 세션 상태에 값 저장
