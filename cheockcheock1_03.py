@@ -150,7 +150,7 @@ if github_info_loaded:
                         "불러올 보고서 양식 파일 리스트", 
                         options=st.session_state['template_list_option_03'], 
                         index=st.session_state['selected_template_index_03'],
-                        key="selected_template"
+                        key="selected_template_03"
                     )
                     # 선택한 템플릿 불러오기
                     st.session_state['selected_template_name_03'] = selected_template
