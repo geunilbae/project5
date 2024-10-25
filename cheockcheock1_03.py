@@ -399,7 +399,7 @@ with st.expander("✍️ 요청사항 리스트", expanded=st.session_state['che
      
             file_list = ['파일을 선택하세요.']
             if st.session_state.get('github_token') and st.session_state.get('github_repo'):
-                all_files = bd.get_github_files(st.session_state['github_repo'], st.session_state['github_branch'], st.session_state['github_token'])
+                all_files = bd.get_github_audiofiles(st.session_state['github_repo'], st.session_state['github_branch'], st.session_state['github_token'])
                 audio_files = [file for file in all_files if file.split('.')[-1].lower() in supported_file_types]
                 file_list += audio_files
                 
