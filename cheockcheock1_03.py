@@ -111,7 +111,7 @@ if github_info_loaded:
                 if selected_folder != folderlist_init_value:
                     st.session_state['upload_folder_03'] = f"uploadFiles/{selected_folder}"
                      
-                    st.session_state['selected_template_name_03'] = templatelist_init_value
+                    st.session_state['selected_template_name_03'] =selected_folder
                     st.session_state['check_report_03']=False
                     st.session_state['check_setting_03']=True
                     st.session_state['selected_template_index_03'] = 0
